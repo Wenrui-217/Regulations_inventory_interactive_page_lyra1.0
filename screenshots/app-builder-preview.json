@@ -1,0 +1,38 @@
+{
+  "url": "http://127.0.0.1:8080/",
+  "viewports": {
+    "desktop": {
+      "width": 1280,
+      "height": 800,
+      "status": 200,
+      "title": "法规信息检索",
+      "hasCanvas": false,
+      "bodyTextLen": 3760,
+      "bodyTextHash": "7af970920fede2c6dc104a4fe5e2cd570e42773d3c7065994a0ac9694fbd6342",
+      "bodyTextPrefix": "法规信息检索 监控到的法规更新放在一起检索。点开看到进一步信息，并回到监管机构原文或文件夹里的原文件。 检索 监测站点 接入数据",
+      "horizontalOverflow": false,
+      "consoleErrors": [
+        "A tree hydrated but some attributes of the server rendered HTML didn't match the client properties. This won't be patched up. This can happen if a SSR-ed Client Component used:\n\n- A server/client branch `if (typeof window !== 'undefined')`.\n- Variable input such as `Date.now()` or `Math.random()` which changes each time it's called.\n- Date formatting in a user's locale which doesn't match the server.\n- External changing data without sending a snapshot of it along with the HTML.\n- Invalid HTML tag nesting.\n\nIt can also happen if the client has a browser extension installed which messes with the HTML before React loaded.\n\n%s%s https://react.dev/link/hydration-mismatch \n\n  ...\n    <MatchImpl routeId=\"/\">\n      <MatchView router={{...}} match={{id:\"//\",ssr:true, ...}}>\n        <CatchBoundary getResetKey={function getResetKey} errorComponent={function AppErrorComponent} ...>\n          <MatchInnerImpl match={{id:\"//\",ssr:true, ...}}>\n            <Lazy>\n              <Home>\n                <RegApp>\n                  <div className=\"min-h-scre...\">\n                    <header>\n                    <main className=\"mx-auto gr...\">\n                      <aside>\n                      <section className=\"min-w-0\">\n                        <LibraryView query=\"\" setQuery={function bound dispatchSetState} tokens={[...]} sort=\"date\" ...>\n                          <div>\n                            <label className=\"relative b...\">\n                              <span>\n                              <Search>\n                              <input\n                                value=\"\"\n                                onChange={function onChange}\n                                placeholder=\"检索法规名称或关键词，例如制药用水\"\n                                className=\"h-12 w-full rounded-md border border-line bg-surface pr-4 pl-10 text-base t...\"\n-                               style={{caret-color:\"transparent\"}}\n                              >\n                            ...\n                    ...\n"
+      ],
+      "pageErrors": [],
+      "screenshot": "/workspace/screenshots/app-builder-preview.png"
+    },
+    "mobile": {
+      "width": 390,
+      "height": 844,
+      "status": 200,
+      "title": "法规信息检索",
+      "hasCanvas": false,
+      "bodyTextLen": 3732,
+      "bodyTextHash": "eabd2a9919587a041052e604d2edb348034e21de458a40b09d5cb9ffb135a74a",
+      "bodyTextPrefix": "法规信息检索 监控到的法规更新放在一起检索。点开看到进一步信息，并回到监管机构原文或文件夹里的原文件。 检索 监测站点 接入数据",
+      "horizontalOverflow": false,
+      "consoleErrors": [],
+      "pageErrors": [],
+      "screenshot": "/workspace/screenshots/app-builder-preview-mobile.png"
+    }
+  },
+  "brandWarnings": [],
+  "authWarnings": [],
+  "verdictFile": "/workspace/screenshots/app-builder-preview.json"
+}

@@ -1,0 +1,38 @@
+{
+  "url": "http://127.0.0.1:8081/",
+  "viewports": {
+    "desktop": {
+      "width": 1280,
+      "height": 800,
+      "status": 200,
+      "title": "法规信息检索",
+      "hasCanvas": false,
+      "bodyTextLen": 3760,
+      "bodyTextHash": "7af970920fede2c6dc104a4fe5e2cd570e42773d3c7065994a0ac9694fbd6342",
+      "bodyTextPrefix": "法规信息检索 监控到的法规更新放在一起检索。点开看到进一步信息，并回到监管机构原文或文件夹里的原文件。 检索 监测站点 接入数据",
+      "horizontalOverflow": false,
+      "consoleErrors": [],
+      "pageErrors": [],
+      "screenshot": "/workspace/screenshots/app-builder-built.png"
+    },
+    "mobile": {
+      "width": 390,
+      "height": 844,
+      "status": 200,
+      "title": "法规信息检索",
+      "hasCanvas": false,
+      "bodyTextLen": 3732,
+      "bodyTextHash": "eabd2a9919587a041052e604d2edb348034e21de458a40b09d5cb9ffb135a74a",
+      "bodyTextPrefix": "法规信息检索 监控到的法规更新放在一起检索。点开看到进一步信息，并回到监管机构原文或文件夹里的原文件。 检索 监测站点 接入数据",
+      "horizontalOverflow": false,
+      "consoleErrors": [],
+      "pageErrors": [],
+      "screenshot": "/workspace/screenshots/app-builder-built-mobile.png"
+    }
+  },
+  "brandWarnings": [],
+  "authWarnings": [],
+  "verdictFile": "/workspace/screenshots/app-builder-built.json",
+  "divergesFromBaseline": false,
+  "baselineReasons": []
+}

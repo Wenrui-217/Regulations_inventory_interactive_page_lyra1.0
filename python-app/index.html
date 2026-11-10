@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>法规信息检索</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <header>
+      <div class="wrap">
+        <div class="brand">
+          <img class="logo" src="assets/bi-lockup.png" alt="Boehringer Ingelheim" />
+          <img class="slogan" src="assets/life-forward.png" alt="Life forward" />
+        </div>
+        <div class="title-row">
+          <div>
+            <h1>法规信息检索</h1>
+            <p class="lede">监控到的法规更新放在一起检索。点开看到进一步信息，并回到监管机构原文或文件夹里的原文件。</p>
+          </div>
+          <nav aria-label="栏目">
+            <button type="button" data-view="library" class="on">检索</button>
+            <button type="button" data-view="sites">监测站点</button>
+            <button type="button" data-view="connect">接入数据</button>
+          </nav>
+        </div>
+      </div>
+    </header>
+
+    <main class="wrap layout">
+      <aside id="filters">
+        <div class="group">
+          <p>资料库</p>
+          <div class="seg" data-filter="library">
+            <button type="button" data-value="all" class="on">全部</button>
+            <button type="button" data-value="relevant">相关</button>
+            <button type="button" data-value="monitor">待审</button>
+          </div>
+        </div>
+        <div class="group">
+          <p>文种</p>
+          <div class="seg" data-filter="lang">
+            <button type="button" data-value="all" class="on">全部</button>
+            <button type="button" data-value="zh">中文</button>
+            <button type="button" data-value="en">英文</button>
+          </div>
+        </div>
+        <div class="group">
+          <p>来源</p>
+          <select id="source" aria-label="来源"></select>
+        </div>
+        <dl class="stats">
+          <div class="stat"><dt>在库</dt><dd id="count-all">0</dd></div>
+          <div class="stat"><dt>相关文件</dt><dd id="count-relevant">0</dd></div>
+          <div class="stat"><dt>待审</dt><dd id="count-monitor">0</dd></div>
+        </dl>
+      </aside>
+
+      <section>
+        <div id="view-library">
+          <label class="search">
+            <span class="sr-only">关键词</span>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#8fb3a3" stroke-width="2" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg>
+            <input id="query" placeholder="检索法规名称或关键词，例如制药用水" />
+          </label>
+          <div id="chips" class="chips"></div>
+          <div class="mobile-filters">
+            <div class="seg" data-filter="library">
+              <button type="button" data-value="all" class="on">全部</button>
+              <button type="button" data-value="relevant">相关</button>
+              <button type="button" data-value="monitor">待审</button>
+            </div>
+            <select id="source-mobile" aria-label="来源"></select>
+            <div class="seg" data-filter="lang">
+              <button type="button" data-value="all" class="on">全部</button>
+              <button type="button" data-value="zh">中文</button>
+              <button type="button" data-value="en">英文</button>
+            </div>
+          </div>
+          <div class="meta">
+            <p id="result-meta" aria-live="polite"></p>
+            <div class="sort">
+              <button type="button" data-sort="relevance">相关度</button>
+              <button type="button" data-sort="date" class="on">发布日期</button>
+            </div>
+          </div>
+          <ul id="cards" class="cards"></ul>
+        </div>
+
+        <div id="view-sites" hidden>
+          <h2>监测站点</h2>
+          <p class="muted small">与现有爬虫一致：列表只核对最新若干条，命中后抓正文；英文页只保留网址，中文页保留正文。PICS Publications 的 docview 链接直接存成 PDF。文件再由 Power Automate 同步到 SharePoint，人工确认相关后转入「相关文件」。</p>
+          <ul id="sites" class="sites"></ul>
+        </div>
+
+        <div id="view-connect" hidden>
+          <div class="panel" style="max-width: 42rem">
+            <h2>接入 SharePoint 资料</h2>
+            <p class="muted small">平台不直接登录 SharePoint。把监控文件夹和「相关文件」导出成 JSON。全公司一起看，请把文件保存为 data/catalog.json 再发布；在这里上传只留在你这台浏览器。</p>
+            <ol class="steps">
+              <li>Power Automate 读取两个文档库的文件名、链接和正文摘录。</li>
+              <li>监控文件夹的 library 写成「监控库」，相关文件夹写成「相关文件」。</li>
+              <li>originalUrl 放监管机构原网页，fileUrl 放 SharePoint 文件链接。</li>
+              <li>生成 JSON 后上传，或把 JSON 放到一个无需登录的 https 地址再同步。</li>
+            </ol>
+            <div class="actions" style="margin-top: 1rem">
+              <label class="file-btn">上传 JSON 并替换
+                <input id="file" type="file" accept="application/json,.json" hidden />
+              </label>
+              <button type="button" class="ghost" id="template">下载模板</button>
+              <button type="button" class="ghost" id="export">导出当前</button>
+              <button type="button" class="quiet" id="reset">恢复演示库</button>
+            </div>
+            <form id="remote" style="margin-top: 1.25rem">
+              <label class="small muted" for="remote-url">或从 https 链接同步 JSON</label>
+              <div class="sync">
+                <input id="remote-url" class="field" placeholder="https://.../regulations.json" />
+                <button type="submit" class="ghost" id="sync">同步</button>
+              </div>
+            </form>
+            <p id="notice" class="notice"></p>
+            <p id="import-note" class="small muted"></p>
+          </div>
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th>字段</th><th>含义</th></tr></thead>
+              <tbody>
+                <tr><td class="field">title</td><td class="muted">法规名称，卡片标题</td></tr>
+                <tr><td class="field">summary</td><td class="muted">进一步信息，显示在标题下方</td></tr>
+                <tr><td class="field">detail</td><td class="muted">点开后的进一步信息</td></tr>
+                <tr><td class="field">originalUrl</td><td class="muted">监管机构原网页</td></tr>
+                <tr><td class="field">fileUrl</td><td class="muted">SharePoint 或附件原文件</td></tr>
+                <tr><td class="field">library</td><td class="muted">监控库，或相关文件</td></tr>
+                <tr><td class="field">source</td><td class="muted">如 PICS、上海药监-药品法规、CFDI</td></tr>
+                <tr><td class="field">keywords</td><td class="muted">关键词数组，或用顿号分隔的字符串</td></tr>
+                <tr><td class="field">publishedAt</td><td class="muted">发布日期，YYYY-MM-DD</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <div id="backdrop" class="backdrop" hidden></div>
+    <aside id="sheet" class="sheet" hidden aria-label="进一步信息"></aside>
+    <script src="app.js"></script>
+  </body>
+</html>

@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <style>
+      @font-face {
+        font-family: "Noto Serif SC";
+        src: url("fonts/font-2.woff2") format("woff2");
+        font-weight: 600;
+        font-style: normal;
+        font-display: block;
+      }
+      @font-face {
+        font-family: "Libre Baskerville";
+        src: url("fonts/font-1.woff2") format("woff2");
+        font-weight: 400;
+        font-style: italic;
+        font-display: block;
+      }
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+      html,
+      body {
+        width: 1200px;
+        height: 630px;
+        overflow: hidden;
+        background: #073128;
+      }
+      .card {
+        width: 1200px;
+        height: 630px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        background: radial-gradient(ellipse 980px 560px at 50% 44%, #0b4032 0%, #073128 70%);
+      }
+      .mark {
+        width: 148px;
+        height: 148px;
+      }
+      h1 {
+        margin-top: 30px;
+        font-family: "Noto Serif SC", "WenQuanYi Zen Hei", serif;
+        font-weight: 600;
+        font-size: 128px;
+        line-height: 1;
+        color: #e7f6ee;
+        letter-spacing: 0.2em;
+        text-indent: 0.2em;
+      }
+      .slogan {
+        margin-top: 20px;
+        font-family: "Libre Baskerville", "Liberation Serif", serif;
+        font-style: italic;
+        font-weight: 400;
+        font-size: 40px;
+        line-height: 1;
+        color: #12de85;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="card">
+      <svg class="mark" viewBox="0 0 200 200" aria-hidden="true">
+        <circle cx="100" cy="100" r="94" fill="none" stroke="#E7F6EE" stroke-width="2.25" />
+        <circle cx="100" cy="100" r="83.5" fill="none" stroke="#12DE85" stroke-width="3.4" />
+        <path d="M63 97 L100 58 L137 97 Z" fill="#E7F6EE" />
+        <rect x="58" y="96.5" width="84" height="8" fill="#E7F6EE" />
+        <g fill="#E7F6EE">
+          <rect x="64" y="106" width="14.5" height="4.2" />
+          <rect x="66.4" y="110.2" width="9.7" height="34" />
+          <rect x="64" y="144.2" width="14.5" height="3.6" />
+
+          <rect x="83.2" y="106" width="14.5" height="4.2" />
+          <rect x="85.6" y="110.2" width="9.7" height="34" />
+          <rect x="83.2" y="144.2" width="14.5" height="3.6" />
+
+          <rect x="102.3" y="106" width="14.5" height="4.2" />
+          <rect x="104.7" y="110.2" width="9.7" height="34" />
+          <rect x="102.3" y="144.2" width="14.5" height="3.6" />
+
+          <rect x="121.5" y="106" width="14.5" height="4.2" />
+          <rect x="123.9" y="110.2" width="9.7" height="34" />
+          <rect x="121.5" y="144.2" width="14.5" height="3.6" />
+        </g>
+        <rect x="55" y="150" width="90" height="6" fill="#E7F6EE" />
+        <rect x="49" y="158" width="102" height="7" fill="#E7F6EE" />
+      </svg>
+      <h1>法规瞭望</h1>
+      <p class="slogan">Life forward</p>
+    </div>
+  </body>
+</html>
