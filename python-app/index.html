@@ -16,7 +16,6 @@
         <div class="title-row">
           <div>
             <h1>法规信息检索</h1>
-            <p class="lede">监控到的法规更新放在一起检索。点开看到进一步信息，并回到监管机构原文或文件夹里的原文件。</p>
           </div>
           <nav aria-label="栏目">
             <button type="button" data-view="library" class="on">检索</button>
@@ -28,34 +27,6 @@
     </header>
 
     <main class="wrap layout">
-      <aside id="filters">
-        <div class="group">
-          <p>资料库</p>
-          <div class="seg" data-filter="library">
-            <button type="button" data-value="all" class="on">全部</button>
-            <button type="button" data-value="relevant">相关</button>
-            <button type="button" data-value="monitor">待审</button>
-          </div>
-        </div>
-        <div class="group">
-          <p>文种</p>
-          <div class="seg" data-filter="lang">
-            <button type="button" data-value="all" class="on">全部</button>
-            <button type="button" data-value="zh">中文</button>
-            <button type="button" data-value="en">英文</button>
-          </div>
-        </div>
-        <div class="group">
-          <p>来源</p>
-          <select id="source" aria-label="来源"></select>
-        </div>
-        <dl class="stats">
-          <div class="stat"><dt>在库</dt><dd id="count-all">0</dd></div>
-          <div class="stat"><dt>相关文件</dt><dd id="count-relevant">0</dd></div>
-          <div class="stat"><dt>待审</dt><dd id="count-monitor">0</dd></div>
-        </dl>
-      </aside>
-
       <section>
         <div id="view-library">
           <label class="search">
@@ -64,19 +35,6 @@
             <input id="query" placeholder="检索法规名称或关键词，例如制药用水" />
           </label>
           <div id="chips" class="chips"></div>
-          <div class="mobile-filters">
-            <div class="seg" data-filter="library">
-              <button type="button" data-value="all" class="on">全部</button>
-              <button type="button" data-value="relevant">相关</button>
-              <button type="button" data-value="monitor">待审</button>
-            </div>
-            <select id="source-mobile" aria-label="来源"></select>
-            <div class="seg" data-filter="lang">
-              <button type="button" data-value="all" class="on">全部</button>
-              <button type="button" data-value="zh">中文</button>
-              <button type="button" data-value="en">英文</button>
-            </div>
-          </div>
           <div class="meta">
             <p id="result-meta" aria-live="polite"></p>
             <div class="sort">

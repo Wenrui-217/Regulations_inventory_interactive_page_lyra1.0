@@ -201,9 +201,6 @@ td.field { color: var(--accent); font-weight: 600; width: auto; min-height: 0; b
 [hidden] { display: none !important; }
 
 @media (min-width: 960px) {
-  .layout { grid-template-columns: 16rem minmax(0, 1fr); align-items: start; }
-  aside { display: block; position: sticky; top: 1rem; }
-  .mobile-filters { display: none; }
   .sync { flex-direction: row; }
   .sync .field { flex: 1; }
 }

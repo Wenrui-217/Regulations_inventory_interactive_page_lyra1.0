@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState, type ReactNode } from "react";
+import { useEffect, useMemo, useState } from "react";
 import * as Dialog from "@radix-ui/react-dialog";
 import { ExternalLink, Search, X } from "lucide-react";
 import lockup from "@/assets/bi-lockup.png";
@@ -12,8 +12,6 @@ import { cn } from "@/lib/utils";
 const STORAGE_KEY = "fagui-liaowang-v1";
 
 type View = "library" | "sites" | "connect";
-type LibraryFilter = "all" | Library;
-type LangFilter = "all" | "zh" | "en";
 
 type Persist = {
   imported: Regulation[];
@@ -100,9 +98,6 @@ export function RegApp() {
   const corpus = useCorpus();
   const [view, setView] = useState<View>("library");
   const [query, setQuery] = useState("");
-  const [library, setLibrary] = useState<LibraryFilter>("all");
-  const [source, setSource] = useState("all");
-  const [lang, setLang] = useState<LangFilter>("all");
   const [sort, setSort] = useState<"relevance" | "date">("relevance");
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [notice, setNotice] = useState("");
@@ -110,24 +105,9 @@ export function RegApp() {
   const [busy, setBusy] = useState(false);
 
   const tokens = queryTokens(query);
-  const sources = useMemo(
-    () => [...new Set(corpus.docs.map((doc) => doc.source))].sort((a, b) => a.localeCompare(b, "zh")),
-    [corpus.docs],
-  );
 
-  const results = useMemo(() => {
-    const filtered = corpus.docs.filter((doc) => {
-      if (library !== "all" && doc.library !== library) return false;
-      if (source !== "all" && doc.source !== source) return false;
-      if (lang !== "all" && doc.language !== lang) return false;
-      return true;
-    });
-    return searchDocuments(filtered, query, sort);
-  }, [corpus.docs, library, source, lang, query, sort]);
-
+  const results = useMemo(() => searchDocuments(corpus.docs, query, sort), [corpus.docs, query, sort]);
   const selected = corpus.docs.find((doc) => doc.id === selectedId) ?? null;
-  const relevantCount = corpus.docs.filter((doc) => doc.library === "relevant").length;
-  const monitorCount = corpus.docs.length - relevantCount;
 
   useEffect(() => {
     if (selectedId && !selected) setSelectedId(null);
@@ -198,9 +178,6 @@ export function RegApp() {
           <div className="mt-5 flex flex-wrap items-end justify-between gap-3">
             <div>
               <h1 className="text-3xl font-medium tracking-tight text-fg">法规信息检索</h1>
-              <p className="mt-1 max-w-xl text-sm text-muted">
-                监控到的法规更新放在一起检索。点开看到进一步信息，并回到监管机构原文或文件夹里的原文件。
-              </p>
             </div>
             <nav className="flex gap-2" aria-label="栏目">
               <TabButton active={view === "library"} onClick={() => setView("library")}>
@@ -217,55 +194,7 @@ export function RegApp() {
         </div>
       </header>
 
-      <main className="mx-auto grid max-w-6xl gap-6 px-4 py-6 lg:grid-cols-[16rem_minmax(0,1fr)]">
-        {view === "library" ? (
-          <aside className="hidden space-y-5 lg:sticky lg:top-4 lg:block lg:self-start">
-            <FilterGroup label="资料库">
-              <Segment
-                value={library}
-                onChange={setLibrary}
-                options={[
-                  { id: "all", label: "全部" },
-                  { id: "relevant", label: "相关" },
-                  { id: "monitor", label: "待审" },
-                ]}
-              />
-            </FilterGroup>
-            <FilterGroup label="文种">
-              <Segment
-                value={lang}
-                onChange={setLang}
-                options={[
-                  { id: "all", label: "全部" },
-                  { id: "zh", label: "中文" },
-                  { id: "en", label: "英文" },
-                ]}
-              />
-            </FilterGroup>
-            <FilterGroup label="来源">
-              <select
-                value={source}
-                onChange={(event) => setSource(event.target.value)}
-                className="h-11 w-full rounded-md border border-line bg-surface px-3 text-sm text-fg focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
-              >
-                <option value="all">全部来源</option>
-                {sources.map((item) => (
-                  <option key={item} value={item}>
-                    {item}
-                  </option>
-                ))}
-              </select>
-            </FilterGroup>
-            <dl className="grid grid-cols-3 gap-2 lg:grid-cols-1">
-              <Stat label="在库" value={corpus.docs.length} />
-              <Stat label="相关文件" value={relevantCount} />
-              <Stat label="待审" value={monitorCount} />
-            </dl>
-          </aside>
-        ) : (
-          <aside className="hidden lg:block" />
-        )}
-
+      <main className="mx-auto max-w-6xl px-4 py-6">
         <section className="min-w-0">
           {view === "library" && (
             <LibraryView
@@ -277,13 +206,6 @@ export function RegApp() {
               results={results}
               hideSeed={corpus.hideSeed}
               onOpen={setSelectedId}
-              library={library}
-              setLibrary={setLibrary}
-              lang={lang}
-              setLang={setLang}
-              source={source}
-              setSource={setSource}
-              sources={sources}
             />
           )}
           {view === "sites" && <SitesView />}
@@ -355,52 +277,6 @@ function TabButton({
   );
 }
 
-function FilterGroup({ label, children }: { label: string; children: ReactNode }) {
-  return (
-    <div>
-      <p className="mb-2 text-xs font-medium tracking-wide text-muted">{label}</p>
-      {children}
-    </div>
-  );
-}
-
-function Segment<T extends string>({
-  value,
-  onChange,
-  options,
-}: {
-  value: T;
-  onChange: (value: T) => void;
-  options: Array<{ id: T; label: string }>;
-}) {
-  return (
-    <div className="grid grid-cols-3 gap-1 rounded-md bg-bg-deep p-1">
-      {options.map((option) => (
-        <button
-          key={option.id}
-          type="button"
-          onClick={() => onChange(option.id)}
-          className={cn(
-            "min-h-11 rounded-sm text-sm font-medium focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent",
-            value === option.id ? "bg-accent text-ink" : "text-muted",
-          )}
-        >
-          {option.label}
-        </button>
-      ))}
-    </div>
-  );
-}
-
-function Stat({ label, value }: { label: string; value: number }) {
-  return (
-    <div className="rounded-lg border border-line bg-surface px-3 py-3">
-      <dt className="text-xs text-muted">{label}</dt>
-      <dd className="font-display text-2xl tabular-nums text-fg">{value}</dd>
-    </div>
-  );
-}
-
 function LibraryView({
   query,
   setQuery,
@@ -410,13 +286,6 @@ function LibraryView({
   results,
   hideSeed,
   onOpen,
-  library,
-  setLibrary,
-  lang,
-  setLang,
-  source,
-  setSource,
-  sources,
 }: {
   query: string;
   setQuery: (value: string) => void;
@@ -426,13 +295,6 @@ function LibraryView({
   results: Regulation[];
   hideSeed: boolean;
   onOpen: (id: string) => void;
-  library: LibraryFilter;
-  setLibrary: (value: LibraryFilter) => void;
-  lang: LangFilter;
-  setLang: (value: LangFilter) => void;
-  source: string;
-  setSource: (value: string) => void;
-  sources: string[];
 }) {
   return (
     <div>
@@ -460,40 +322,6 @@ function LibraryView({
             {item}
           </button>
         ))}
-      </div>
-
-      <div className="mt-4 space-y-3 lg:hidden">
-        <Segment
-          value={library}
-          onChange={setLibrary}
-          options={[
-            { id: "all", label: "全部" },
-            { id: "relevant", label: "相关" },
-            { id: "monitor", label: "待审" },
-          ]}
-        />
-        <select
-          value={source}
-          onChange={(event) => setSource(event.target.value)}
-          aria-label="来源"
-          className="h-11 w-full rounded-md border border-line bg-surface px-3 text-sm text-fg focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
-        >
-          <option value="all">全部来源</option>
-          {sources.map((item) => (
-            <option key={item} value={item}>
-              {item}
-            </option>
-          ))}
-        </select>
-        <Segment
-          value={lang}
-          onChange={setLang}
-          options={[
-            { id: "all", label: "全部" },
-            { id: "zh", label: "中文" },
-            { id: "en", label: "英文" },
-          ]}
-        />
       </div>
 
       <div className="mt-4 flex flex-wrap items-center justify-between gap-3">

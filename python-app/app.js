@@ -4,9 +4,6 @@ const state = {
   catalog: { documents: [], sites: [], suggestions: [] },
   view: "library",
   query: "",
-  library: "all",
-  source: "all",
-  lang: "all",
   sort: "relevance",
   selectedId: null,
   notice: "",
@@ -213,24 +210,7 @@ function downloadJson(filename, data) {
 }
 
 function filteredDocs() {
-  return docs().filter((doc) => {
-    if (state.library !== "all" && doc.library !== state.library) return false;
-    if (state.source !== "all" && doc.source !== state.source) return false;
-    if (state.lang !== "all" && doc.language !== state.lang) return false;
-    return true;
-  });
-}
-
-function renderSources() {
-  const names = [...new Set(docs().map((doc) => doc.source))].sort((a, b) => a.localeCompare(b, "zh"));
-  const options = [`<option value="all">全部来源</option>`]
-    .concat(names.map((name) => `<option value="${esc(name)}">${esc(name)}</option>`))
-    .join("");
-  for (const id of ["source", "source-mobile"]) {
-    const select = $(id);
-    select.innerHTML = options;
-    select.value = names.includes(state.source) || state.source === "all" ? state.source : "all";
-  }
+  return docs();
 }
 
 function renderCards() {
@@ -277,10 +257,6 @@ function renderCards() {
 
 function renderCounts() {
   const all = docs();
-  const relevant = all.filter((doc) => doc.library === "relevant").length;
-  $("count-all").textContent = String(all.length);
-  $("count-relevant").textContent = String(relevant);
-  $("count-monitor").textContent = String(all.length - relevant);
   $("export").textContent = `导出当前 ${all.length} 条`;
   $("import-note").textContent = state.hideSeed
     ? "演示库已隐藏，当前是导入的数据。导入内容只在这台浏览器。全公司发布请改 data/catalog.json。"
@@ -368,18 +344,8 @@ function showView(view) {
   $("view-library").hidden = view !== "library";
   $("view-sites").hidden = view !== "sites";
   $("view-connect").hidden = view !== "connect";
-  $("filters").style.visibility = view === "library" ? "" : "hidden";
   document.querySelectorAll("nav button").forEach((button) => {
     button.classList.toggle("on", button.dataset.view === view);
-  });
-}
-
-function syncSegments() {
-  document.querySelectorAll(".seg").forEach((group) => {
-    group.querySelectorAll("button").forEach((button) => {
-      const key = group.dataset.filter;
-      button.classList.toggle("on", button.dataset.value === state[key]);
-    });
   });
 }
 
@@ -405,7 +371,6 @@ function applyImport(parsed, mode) {
   state.query = "";
   $("query").value = "";
   showView("library");
-  renderSources();
   renderCounts();
   renderChips();
   renderCards();
@@ -428,22 +393,6 @@ function bind() {
     renderChips();
     renderCards();
   });
-  document.querySelectorAll(".seg").forEach((group) => {
-    group.addEventListener("click", (event) => {
-      const button = event.target.closest("button");
-      if (!button) return;
-      state[group.dataset.filter] = button.dataset.value;
-      syncSegments();
-      renderCards();
-    });
-  });
-  for (const id of ["source", "source-mobile"]) {
-    $(id).addEventListener("change", (event) => {
-      state.source = event.target.value;
-      renderSources();
-      renderCards();
-    });
-  }
   document.querySelectorAll("[data-sort]").forEach((button) => {
     button.onclick = () => {
       state.sort = button.dataset.sort;
@@ -497,7 +446,6 @@ function bind() {
     state.overrides = {};
     persist();
     $("notice").textContent = "已恢复演示库。";
-    renderSources();
     renderCounts();
     renderCards();
     renderSheet();
@@ -537,7 +485,6 @@ async function main() {
   bind();
   renderChips();
   renderSites();
-  renderSources();
   renderCounts();
   renderCards();
   showView("library");
