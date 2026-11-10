@@ -52,7 +52,8 @@ h1 { margin: 0; font-size: 1.875rem; letter-spacing: -0.02em; }
 .lede { margin: 0.25rem 0 0; max-width: 36rem; color: var(--muted); font-size: 0.875rem; }
 nav { display: flex; gap: 0.5rem; }
 
-.layout { display: grid; gap: 1.5rem; padding: 1.5rem 0 3rem; }
+section { min-width: 0; }
+h2, .summary { overflow-wrap: anywhere; }
 aside { display: none; }
 .group { margin-bottom: 1.25rem; }
 .group p { margin: 0 0 0.5rem; font-size: 0.75rem; color: var(--muted); }
@@ -90,7 +91,7 @@ select:focus, .field:focus, button:focus-visible { outline: 2px solid var(--acce
   font-size: 1rem;
 }
 .search svg { position: absolute; left: 0.75rem; top: 50%; transform: translateY(-50%); }
-.chips { display: flex; gap: 0.5rem; overflow-x: auto; margin-top: 0.75rem; padding-bottom: 0.25rem; }
+.chips { display: flex; gap: 0.5rem; overflow-x: auto; min-width: 0; max-width: 100%; margin-top: 0.75rem; padding-bottom: 0.25rem; }
 .chips button {
   flex: none;
   min-height: 2.75rem;
@@ -197,6 +198,8 @@ td.field { color: var(--accent); font-weight: 600; width: auto; min-height: 0; b
   border: 0;
 }
 
+[hidden] { display: none !important; }
+
 @media (min-width: 960px) {
   .layout { grid-template-columns: 16rem minmax(0, 1fr); align-items: start; }
   aside { display: block; position: sticky; top: 1rem; }
@@ -207,4 +210,6 @@ td.field { color: var(--accent); font-weight: 600; width: auto; min-height: 0; b
 
 @media (max-width: 640px) {
   .brand img.slogan { display: none; }
+  .meta { flex-direction: column; align-items: stretch; }
+  .sort button { flex: 1; }
 }
