@@ -3,7 +3,7 @@ import * as Dialog from "@radix-ui/react-dialog";
 import { ExternalLink, Search, X } from "lucide-react";
 import lockup from "@/assets/bi-lockup.png";
 import slogan from "@/assets/life-forward.png";
-import { MONITOR_SITES, SEED, SUGGESTIONS, libraryLabel, type Library, type Regulation } from "@/data/corpus";
+import { SEED, SUGGESTIONS, libraryLabel, type Library, type Regulation } from "@/data/corpus";
 import { parseCorpus } from "@/lib/corpus";
 import { fetchRemoteCorpus } from "@/lib/fetch-corpus";
 import { queryTokens, searchDocuments, splitHighlight } from "@/lib/search";
@@ -184,7 +184,7 @@ export function RegApp() {
                 检索
               </TabButton>
               <TabButton active={view === "sites"} onClick={() => setView("sites")}>
-                监测站点
+                相关网址
               </TabButton>
               <TabButton active={view === "connect"} onClick={() => setView("connect")}>
                 接入数据
@@ -208,7 +208,7 @@ export function RegApp() {
               onOpen={setSelectedId}
             />
           )}
-          {view === "sites" && <SitesView />}
+          {view === "sites" && <SitesView docs={corpus.docs} />}
           {view === "connect" && (
             <ConnectView
               notice={notice}
@@ -483,29 +483,22 @@ function Detail({ doc, tokens, onToggle }: { doc: Regulation; tokens: string[]; 
   );
 }
 
-function SitesView() {
+function SitesView({ docs }: { docs: Regulation[] }) {
+  const ordered = [...docs].sort(
+    (a, b) => a.source.localeCompare(b.source, "zh") || b.publishedAt.localeCompare(a.publishedAt),
+  );
   return (
     <div>
-      <h2 className="text-2xl font-medium">监测站点</h2>
-      <p className="mt-2 max-w-2xl text-sm leading-6 text-muted">
-        与现有爬虫一致：列表只核对最新若干条，命中后抓正文；英文页只保留网址，中文页保留正文。PICS Publications 的 docview 链接直接存成 PDF。文件再由 Power Automate 同步到 SharePoint，人工确认相关后转入「相关文件」。
-      </p>
+      <h2 className="text-2xl font-medium">相关网址汇总</h2>
       <ul className="mt-5 space-y-3">
-        {MONITOR_SITES.map((site) => (
-          <li key={site.name} className="rounded-xl border border-line bg-surface p-4">
-            <div className="flex flex-wrap items-baseline justify-between gap-2">
-              <h3 className="text-lg font-medium text-fg">{site.name}</h3>
-              <a
-                href={site.url}
-                target="_blank"
-                rel="noreferrer"
-                className="inline-flex min-h-11 items-center gap-1 text-sm text-accent"
-              >
-                打开列表
-                <ExternalLink className="size-3.5" aria-hidden="true" />
-              </a>
+        {ordered.map((doc) => (
+          <li key={doc.id} className="rounded-xl border border-line bg-surface p-4">
+            <p className="text-xs text-muted">{doc.source}</p>
+            <h3 className="mt-1 text-lg font-medium text-fg">{doc.title}</h3>
+            <div className="mt-2 flex flex-wrap gap-2">
+              <TextLink href={doc.originalUrl}>监管机构原文</TextLink>
+              {doc.fileUrl ? <TextLink href={doc.fileUrl}>{doc.fileLabel || "原文件"}</TextLink> : null}
             </div>
-            <p className="mt-1 text-sm leading-6 text-muted">{site.note}</p>
           </li>
         ))}
       </ul>

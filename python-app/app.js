@@ -317,16 +317,23 @@ function renderSheet() {
 }
 
 function renderSites() {
-  $("sites").innerHTML = state.catalog.sites
-    .map(
-      (site) => `<li class="site">
-        <div class="site-head">
-          <h3>${esc(site.name)}</h3>
-          <a class="linkish" href="${esc(site.url)}" target="_blank" rel="noreferrer">打开列表</a>
+  const list = docs().slice().sort(
+    (a, b) => a.source.localeCompare(b.source, "zh") || b.publishedAt.localeCompare(a.publishedAt),
+  );
+  $("sites").innerHTML = list
+    .map((doc) => {
+      const file = doc.fileUrl
+        ? `<a class="linkish" href="${esc(doc.fileUrl)}" target="_blank" rel="noreferrer">${esc(doc.fileLabel || "原文件")}</a>`
+        : "";
+      return `<li class="site">
+        <p class="small muted">${esc(doc.source)}</p>
+        <h3>${esc(doc.title)}</h3>
+        <div class="actions">
+          <a class="linkish" href="${esc(doc.originalUrl)}" target="_blank" rel="noreferrer">监管机构原文</a>
+          ${file}
         </div>
-        <p class="small muted">${esc(site.note)}</p>
-      </li>`,
-    )
+      </li>`;
+    })
     .join("");
 }
 
@@ -347,6 +354,7 @@ function showView(view) {
   document.querySelectorAll("nav button").forEach((button) => {
     button.classList.toggle("on", button.dataset.view === view);
   });
+  if (view === "sites") renderSites();
 }
 
 function applyImport(parsed, mode) {
