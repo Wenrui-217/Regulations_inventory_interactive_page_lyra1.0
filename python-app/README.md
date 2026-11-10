@@ -30,7 +30,7 @@ py serve.py
 | 页面上的固定句子、按钮 | [index.html](index.html) |
 | 颜色 | [styles.css](styles.css) 文件开头的变量 |
 | 检索、筛选、导入逻辑 | [app.js](app.js) |
-| 演示法规、监测站点、推荐词 | [data/catalog.json](data/catalog.json) |
+| 相关网址 | [data/links.json](data/links.json) 里的 name、url、note |
 | 公司标志 | [assets/bi-lockup.png](assets/bi-lockup.png)、[assets/life-forward.png](assets/life-forward.png) |
 
 改完保存，浏览器刷新即可。不需要编译。

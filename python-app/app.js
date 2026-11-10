@@ -1,7 +1,8 @@
 const STORAGE_KEY = "fagui-search-v1";
 
 const state = {
-  catalog: { documents: [], sites: [], suggestions: [] },
+  catalog: { documents: [], suggestions: [] },
+  links: [],
   view: "library",
   query: "",
   sort: "relevance",
@@ -317,23 +318,14 @@ function renderSheet() {
 }
 
 function renderSites() {
-  const list = docs().slice().sort(
-    (a, b) => a.source.localeCompare(b.source, "zh") || b.publishedAt.localeCompare(a.publishedAt),
-  );
-  $("sites").innerHTML = list
-    .map((doc) => {
-      const file = doc.fileUrl
-        ? `<a class="linkish" href="${esc(doc.fileUrl)}" target="_blank" rel="noreferrer">${esc(doc.fileLabel || "原文件")}</a>`
-        : "";
-      return `<li class="site">
-        <p class="small muted">${esc(doc.source)}</p>
-        <h3>${esc(doc.title)}</h3>
-        <div class="actions">
-          <a class="linkish" href="${esc(doc.originalUrl)}" target="_blank" rel="noreferrer">监管机构原文</a>
-          ${file}
-        </div>
-      </li>`;
-    })
+  $("sites").innerHTML = state.links
+    .map(
+      (link) => `<li class="site">
+        <h3>${esc(link.name)}</h3>
+        <p class="small muted">${esc(link.note || "")}</p>
+        <a class="linkish" href="${esc(link.url)}" target="_blank" rel="noreferrer">${esc(link.url)}</a>
+      </li>`,
+    )
     .join("");
 }
 
@@ -490,6 +482,8 @@ async function main() {
   const response = await fetch("data/catalog.json");
   if (!response.ok) throw new Error("catalog");
   state.catalog = await response.json();
+  const linksResponse = await fetch("data/links.json");
+  if (linksResponse.ok) state.links = await linksResponse.json();
   bind();
   renderChips();
   renderSites();

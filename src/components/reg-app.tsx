@@ -4,6 +4,7 @@ import { ExternalLink, Search, X } from "lucide-react";
 import lockup from "@/assets/bi-lockup.png";
 import slogan from "@/assets/life-forward.png";
 import { SEED, SUGGESTIONS, libraryLabel, type Library, type Regulation } from "@/data/corpus";
+import agencyLinks from "@/data/links.json";
 import { parseCorpus } from "@/lib/corpus";
 import { fetchRemoteCorpus } from "@/lib/fetch-corpus";
 import { queryTokens, searchDocuments, splitHighlight } from "@/lib/search";
@@ -208,7 +209,7 @@ export function RegApp() {
               onOpen={setSelectedId}
             />
           )}
-          {view === "sites" && <SitesView docs={corpus.docs} />}
+          {view === "sites" && <SitesView />}
           {view === "connect" && (
             <ConnectView
               notice={notice}
@@ -483,22 +484,23 @@ function Detail({ doc, tokens, onToggle }: { doc: Regulation; tokens: string[]; 
   );
 }
 
-function SitesView({ docs }: { docs: Regulation[] }) {
-  const ordered = [...docs].sort(
-    (a, b) => a.source.localeCompare(b.source, "zh") || b.publishedAt.localeCompare(a.publishedAt),
-  );
+function SitesView() {
   return (
     <div>
-      <h2 className="text-2xl font-medium">相关网址汇总</h2>
-      <ul className="mt-5 space-y-3">
-        {ordered.map((doc) => (
-          <li key={doc.id} className="rounded-xl border border-line bg-surface p-4">
-            <p className="text-xs text-muted">{doc.source}</p>
-            <h3 className="mt-1 text-lg font-medium text-fg">{doc.title}</h3>
-            <div className="mt-2 flex flex-wrap gap-2">
-              <TextLink href={doc.originalUrl}>监管机构原文</TextLink>
-              {doc.fileUrl ? <TextLink href={doc.fileUrl}>{doc.fileLabel || "原文件"}</TextLink> : null}
-            </div>
+      <h2 className="text-2xl font-medium">相关网址</h2>
+      <ul className="mt-5 grid gap-3 sm:grid-cols-2">
+        {agencyLinks.map((link) => (
+          <li key={link.url} className="rounded-xl border border-line bg-surface p-4">
+            <h3 className="text-lg font-medium text-fg">{link.name}</h3>
+            <p className="mt-1 text-sm leading-6 text-muted">{link.note}</p>
+            <a
+              href={link.url}
+              target="_blank"
+              rel="noreferrer"
+              className="mt-3 inline-flex min-h-11 items-center break-all text-sm text-accent underline decoration-line underline-offset-4"
+            >
+              {link.url}
+            </a>
           </li>
         ))}
       </ul>

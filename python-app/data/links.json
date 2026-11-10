@@ -1,0 +1,27 @@
+[
+  {
+    "name": "国家药品监督管理局",
+    "url": "https://www.nmpa.gov.cn/",
+    "note": "国家局网站。法规、公告和政务公开。"
+  },
+  {
+    "name": "PIC/S",
+    "url": "https://picscheme.org/",
+    "note": "药品检查合作计划英文网站。"
+  },
+  {
+    "name": "PIC/S 出版物",
+    "url": "https://picscheme.org/en/publications",
+    "note": "GMP 指南、附录和其他出版物。"
+  },
+  {
+    "name": "上海市药品监督管理局",
+    "url": "https://yjj.sh.gov.cn/",
+    "note": "上海市药监局网站。"
+  },
+  {
+    "name": "食品药品审核查验中心",
+    "url": "https://www.cfdi.org.cn/",
+    "note": "核查中心网站。检查通告和公告。"
+  }
+]
